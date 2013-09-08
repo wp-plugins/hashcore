@@ -1,4 +1,4 @@
-=== #HASHCORE: Harness The Power Of Hashtagging ===
+=== #HASHCORE: Clickable Hashtags ===
 Contributors: Tim Bobker
 Tags: Facebook widget, Twitter widget, Social Media, Hashcore, Instagram widget, Youtube widget, Social Media Aggregator, Social Feed Aggregator, Social Media Aggregation, import social feeds, Instagram hashtag, Twitter hashtag, display social media, embed social media feeds, Pinterest widget, integrate Pinterest, RSS widget
 Requires at least: 3.0.1
@@ -7,7 +7,7 @@ Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Use hashtags in-content to deliver real-time social media information to your readers.
+#HASHCORE: Use hashtags in-content to deliver real-time social media information to your readers.
 
 == Description ==
 
@@ -36,9 +36,7 @@ Yes. Please register as a publisher, go to [#HASHCORE - sign up for FREE](http:/
 = What are the benefits of using #HASHCORE? =
 
 * Keep your Stories Lively
-
 * Increase Site Engagement
-
 * Attract Followers
 
 = How do I use #HASHCORE? =
