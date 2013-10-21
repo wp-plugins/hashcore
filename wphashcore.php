@@ -3,8 +3,8 @@
 
 Plugin Name: #Hashcore
 Plugin URI: http://hashcore.com/add-a-social-media-plugin-to-your-wordpress-website/
-Description: Inserts the hashcore code in the footer
-Version: 1.0
+Description: Sign-up for a Hashcore.com account. Install our plugin, then simply add the hash symbol (#) before any words (preferably known hashtags) such as #Xfactor and our solution will automatically link them to their equivalent hashtags from real-time social media sources such as Twitter.
+Version: 1.1
 Author: Hashcore.com
 Author URI: http://www.hashcore.com
 License: GPL2 or later
@@ -68,16 +68,27 @@ function fc_settings_page() {
     }
 
     // variables for the field and option names 
-    $fc_text = 'fc_input_text';
-    $hidden_field_name = 'fc_submit_hidden';
-    $footer_field_name = 'fc_input_text';
-    $publisher_field_name = 'hc_input_text';
+    
+    $hidden_field_name = 'fc_submit_hidden';    
     $fch_text = 'fch_input_text';
+    
+    
+    
+    // Twitter user name variables
+    $footer_field_name = 'fc_input_text';
+    $fc_text = 'fc_input_text';
+	$fc_val = get_option( $fc_text );
+	
+	//publisher ID variables
+	$publisher_field_name = 'hc_input_text';	
     $hc_publisher = 'hc_publisher_text';
+	$hc_val = get_option( $hc_publisher );
+	
+	// languages variables
+	$publisher_languages  = 'hc_languages';
+	$hc_languages = 'hc_language_options';
+	$hc_lang = get_option($hc_languages);
 
-	// Read in existing option value from database
-    $fc_val = get_option( $fc_text );
-    $hc_val = get_option( $hc_publisher );
 
 
 // See if the user has posted us some information
@@ -91,6 +102,9 @@ if( isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' )
 	
 	$hc_val = $_POST[$publisher_field_name]; 
 	update_option( $hc_publisher, $hc_val );
+	
+	$hc_lang = $_POST[$publisher_languages]; 
+	update_option( $hc_languages, $hc_lang );
 	
 	
 	echo '<div class="updated"><p><strong>';
@@ -110,17 +124,38 @@ if( isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' )
 
 <form name="form1" method="post" action="">
 <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
-<div>
-	<?php _e('Twitter username', 'fc-menu' ); ?>
-	<input type="text" name="<?php echo $footer_field_name; ?>" value="<?php echo $fc_val; ?>" />
-</div>	
-<div>Please enter your twitter username. If left blank, defaults to HASHCORE_COM</div>
-<div>
-	<?php _e('Publisher ID', 'fc-menu' ); ?>
-	<input type="text" name="<?php echo $publisher_field_name; ?>" value="<?php echo $hc_val; ?>" />
-</div>
-<div>Please register <a href="http://hashcore.com/publishers-sign-up-form/" title="register with hashcore">here</a> to get your unique publisher ID</div>
-<div><?php submit_button(); ?></div>
+
+<table>
+	<tr>
+		<td><?php _e('Twitter username', 'fc-menu' ); ?>&nbsp;@</td>
+		<td>
+			<input type="text" name="<?php echo $footer_field_name; ?>" value="<?php echo $fc_val; ?>" />	
+			&nbsp;If left blank, defaults to HASHCORE_COM
+		</td>
+	</tr>
+	
+	<tr>
+		<td><?php _e('Publisher ID', 'fc-menu' ); ?></td>
+		<td>
+			<input type="text" name="<?php echo $publisher_field_name; ?>" value="<?php echo $hc_val; ?>" />
+			&nbsp;Please register <a href="http://hashcore.com/publishers-sign-up-form/" title="register with hashcore" target="_blank">here</a> to get your unique publisher ID
+		</td>
+	</tr>
+	
+	<tr>
+		<td><?php _e('Language', 'fc-menu' ); ?></td>
+		<td>	
+			<select name="<?php echo $publisher_languages; ?>">
+				<?php echo language_options($hc_lang); ?>
+			</select>
+		</td>	
+	</tr>
+	
+	<tr><td colspan="2"><?php submit_button(); ?></td></tr>
+
+</table>
+
+
 </form>
 <?php }
 
@@ -142,9 +177,13 @@ $fc_plugin_links = array(
 		echo '<script type="text/javascript">';
 		echo 'var TWITTER_USERNAME="'.fc_twitter_username().'";';
 		echo 'var publisher="' .fc_publisher_code().'";';
+		echo 'var lang="'.fc_languages().'";';
 		echo '</script>';
 		echo '<script src="http://hashcore.com/hashcorev1.1/hashcore.js" type="text/javascript"></script>';
 	  }
+	  
+	  
+	  
 function fc_twitter_username()
 {
 	if(get_option('fc_input_text') == '')
@@ -169,5 +208,188 @@ function fc_publisher_code()
 	}
 }
 
+function fc_languages()
+{
+	if(get_option('hc_language_options') == '')
+	{
+		return "en";
+	}
+	else
+	{
+		return get_option('hc_language_options');
+	}
+}
+
+function language_options($set_lang)
+{
+
+	if(empty($set_lang) OR !isset($set_lang) OR $set_lang == "")
+	{
+		$default_lang = "en";
+	}
+	else
+	{
+		$default_lang = $set_lang;
+	}
+	
+	$lang = array();
+
+	$lang[0]=array('code'=>'aa', 'name'=>'Afar');
+	$lang[1]=array('code'=>'ab', 'name'=>'Abkhazian');
+	$lang[2]=array('code'=>'af', 'name'=>'Afrikaans');
+	$lang[3]=array('code'=>'am', 'name'=>'Amharic');
+	$lang[4]=array('code'=>'ar', 'name'=>'Arabic');
+	$lang[5]=array('code'=>'as', 'name'=>'Assamese');
+	$lang[6]=array('code'=>'ay', 'name'=>'Aymara');
+	$lang[7]=array('code'=>'az', 'name'=>'Azerbaijani');
+	$lang[8]=array('code'=>'ba', 'name'=>'Bashkir');
+	$lang[9]=array('code'=>'be', 'name'=>'Byelorussian');
+	$lang[10]=array('code'=>'bg', 'name'=>'Bulgarian');
+	$lang[11]=array('code'=>'bh', 'name'=>'Bihari');
+	$lang[12]=array('code'=>'bi', 'name'=>'Bislama');
+	$lang[13]=array('code'=>'bn', 'name'=>'Bengali');
+	$lang[14]=array('code'=>'bo', 'name'=>'Tibetan');
+	$lang[15]=array('code'=>'br', 'name'=>'Breton');
+	$lang[16]=array('code'=>'ca', 'name'=>'Catalan');
+	$lang[17]=array('code'=>'co', 'name'=>'Corsican');
+	$lang[18]=array('code'=>'cs', 'name'=>'Czech');
+	$lang[19]=array('code'=>'cy', 'name'=>'Welch');
+	$lang[20]=array('code'=>'da', 'name'=>'Danish');
+	$lang[21]=array('code'=>'de', 'name'=>'German');
+	$lang[22]=array('code'=>'dz', 'name'=>'Bhutani');
+	$lang[23]=array('code'=>'el', 'name'=>'Greek');
+	$lang[24]=array('code'=>'en', 'name'=>'English');
+	$lang[25]=array('code'=>'eo', 'name'=>'Esperanto');
+	$lang[26]=array('code'=>'es', 'name'=>'Spanish');
+	$lang[27]=array('code'=>'et', 'name'=>'Estonian');
+	$lang[28]=array('code'=>'eu', 'name'=>'Basque');
+	$lang[29]=array('code'=>'fa', 'name'=>'Persian');
+	$lang[30]=array('code'=>'fi', 'name'=>'Finnish');
+	$lang[31]=array('code'=>'fj', 'name'=>'Fiji');
+	$lang[32]=array('code'=>'fo', 'name'=>'Faeroese');
+	$lang[33]=array('code'=>'fr', 'name'=>'French');
+	$lang[34]=array('code'=>'fy', 'name'=>'Frisian');
+	$lang[35]=array('code'=>'ga', 'name'=>'Irish');
+	$lang[36]=array('code'=>'gd', 'name'=>'Scots Gaelic');
+	$lang[37]=array('code'=>'gl', 'name'=>'Galician');
+	$lang[38]=array('code'=>'gn', 'name'=>'Guarani');
+	$lang[39]=array('code'=>'gu', 'name'=>'Gujarati');
+	$lang[40]=array('code'=>'ha', 'name'=>'Hausa');
+	$lang[41]=array('code'=>'hi', 'name'=>'Hindi');
+	$lang[42]=array('code'=>'he', 'name'=>'Hebrew');
+	$lang[43]=array('code'=>'hr', 'name'=>'Croatian');
+	$lang[44]=array('code'=>'hu', 'name'=>'Hungarian');
+	$lang[45]=array('code'=>'hy', 'name'=>'Armenian');
+	$lang[46]=array('code'=>'ia', 'name'=>'Interlingua');
+	$lang[47]=array('code'=>'id', 'name'=>'Indonesian');
+	$lang[48]=array('code'=>'ie', 'name'=>'Interlingue');
+	$lang[49]=array('code'=>'ik', 'name'=>'Inupiak');
+	$lang[50]=array('code'=>'in', 'name'=>'former Indonesian');
+	$lang[51]=array('code'=>'is', 'name'=>'Icelandic');
+	$lang[52]=array('code'=>'it', 'name'=>'Italian');
+	$lang[53]=array('code'=>'iu', 'name'=>'Inuktitut (Eskimo)');
+	$lang[54]=array('code'=>'iw', 'name'=>'former Hebrew');
+	$lang[55]=array('code'=>'ja', 'name'=>'Japanese');
+	$lang[56]=array('code'=>'ji', 'name'=>'former Yiddish');
+	$lang[57]=array('code'=>'jw', 'name'=>'Javanese');
+	$lang[58]=array('code'=>'ka', 'name'=>'Georgian');
+	$lang[59]=array('code'=>'kk', 'name'=>'Kazakh');
+	$lang[60]=array('code'=>'kl', 'name'=>'Greenlandic');
+	$lang[61]=array('code'=>'km', 'name'=>'Cambodian');
+	$lang[62]=array('code'=>'kn', 'name'=>'Kannada');
+	$lang[63]=array('code'=>'ko', 'name'=>'Korean');
+	$lang[64]=array('code'=>'ks', 'name'=>'Kashmiri');
+	$lang[65]=array('code'=>'ku', 'name'=>'Kurdish');
+	$lang[66]=array('code'=>'ky', 'name'=>'Kirghiz');
+	$lang[67]=array('code'=>'la', 'name'=>'Latin');
+	$lang[68]=array('code'=>'ln', 'name'=>'Lingala');
+	$lang[69]=array('code'=>'lo', 'name'=>'Laothian');
+	$lang[70]=array('code'=>'lt', 'name'=>'Lithuanian');
+	$lang[71]=array('code'=>'lv', 'name'=>'Latvian, Lettish');
+	$lang[72]=array('code'=>'mg', 'name'=>'Malagasy');
+	$lang[73]=array('code'=>'mi', 'name'=>'Maori');
+	$lang[74]=array('code'=>'mk', 'name'=>'Macedonian');
+	$lang[75]=array('code'=>'ml', 'name'=>'Malayalam');
+	$lang[76]=array('code'=>'mn', 'name'=>'Mongolian');
+	$lang[77]=array('code'=>'mo', 'name'=>'Moldavian');
+	$lang[78]=array('code'=>'mr', 'name'=>'Marathi');
+	$lang[79]=array('code'=>'ms', 'name'=>'Malay');
+	$lang[80]=array('code'=>'mt', 'name'=>'Maltese');
+	$lang[81]=array('code'=>'my', 'name'=>'Burmese');
+	$lang[82]=array('code'=>'na', 'name'=>'Nauru');
+	$lang[83]=array('code'=>'ne', 'name'=>'Nepali');
+	$lang[84]=array('code'=>'nl', 'name'=>'Dutch');
+	$lang[85]=array('code'=>'no', 'name'=>'Norwegian');
+	$lang[86]=array('code'=>'oc', 'name'=>'Occitan');
+	$lang[87]=array('code'=>'om', 'name'=>'(Afan) Oromo');
+	$lang[88]=array('code'=>'or', 'name'=>'Oriya');
+	$lang[89]=array('code'=>'pa', 'name'=>'Punjabi');
+	$lang[90]=array('code'=>'pl', 'name'=>'Polish');
+	$lang[91]=array('code'=>'ps', 'name'=>'Pashto, Pushto');
+	$lang[92]=array('code'=>'pt', 'name'=>'Portuguese');
+	$lang[93]=array('code'=>'qu', 'name'=>'Quechua');
+	$lang[94]=array('code'=>'rm', 'name'=>'Rhaeto-Romance');
+	$lang[95]=array('code'=>'rn', 'name'=>'Kirundi');
+	$lang[96]=array('code'=>'ro', 'name'=>'Romanian');
+	$lang[97]=array('code'=>'ru', 'name'=>'Russian');
+	$lang[98]=array('code'=>'rw', 'name'=>'Kinyarwanda');
+	$lang[99]=array('code'=>'sa', 'name'=>'Sanskrit');
+	$lang[100]=array('code'=>'sd', 'name'=>'Sindhi');
+	$lang[101]=array('code'=>'sg', 'name'=>'Sangro');
+	$lang[102]=array('code'=>'sh', 'name'=>'Serbo-Croatian');
+	$lang[103]=array('code'=>'si', 'name'=>'Singhalese');
+	$lang[104]=array('code'=>'sk', 'name'=>'Slovak');
+	$lang[105]=array('code'=>'sl', 'name'=>'Slovenian');
+	$lang[106]=array('code'=>'sm', 'name'=>'Samoan');
+	$lang[107]=array('code'=>'sn', 'name'=>'Shona');
+	$lang[108]=array('code'=>'so', 'name'=>'Somali');
+	$lang[109]=array('code'=>'sq', 'name'=>'Albanian');
+	$lang[110]=array('code'=>'sr', 'name'=>'Serbian');
+	$lang[111]=array('code'=>'ss', 'name'=>'Siswati');
+	$lang[112]=array('code'=>'st', 'name'=>'Sesotho');
+	$lang[113]=array('code'=>'su', 'name'=>'Sudanese');
+	$lang[114]=array('code'=>'sv', 'name'=>'Swedish');
+	$lang[115]=array('code'=>'sw', 'name'=>'Swahili');
+	$lang[116]=array('code'=>'ta', 'name'=>'Tamil');
+	$lang[117]=array('code'=>'te', 'name'=>'Tegulu');
+	$lang[118]=array('code'=>'tg', 'name'=>'Tajik');
+	$lang[119]=array('code'=>'th', 'name'=>'Thai');
+	$lang[120]=array('code'=>'ti', 'name'=>'Tigrinya');
+	$lang[121]=array('code'=>'tk', 'name'=>'Turkmen');
+	$lang[122]=array('code'=>'tl', 'name'=>'Tagalog');
+	$lang[123]=array('code'=>'tn', 'name'=>'Setswana');
+	$lang[124]=array('code'=>'to', 'name'=>'Tonga');
+	$lang[125]=array('code'=>'tr', 'name'=>'Turkish');
+	$lang[126]=array('code'=>'ts', 'name'=>'Tsonga');
+	$lang[127]=array('code'=>'tt', 'name'=>'Tatar');
+	$lang[128]=array('code'=>'tw', 'name'=>'Twi');
+	$lang[129]=array('code'=>'ug', 'name'=>'Uigur');
+	$lang[130]=array('code'=>'uk', 'name'=>'Ukrainian');
+	$lang[131]=array('code'=>'ur', 'name'=>'Urdu');
+	$lang[132]=array('code'=>'uz', 'name'=>'Uzbek');
+	$lang[133]=array('code'=>'vi', 'name'=>'Vietnamese');
+	$lang[134]=array('code'=>'vo', 'name'=>'Volapuk');
+	$lang[135]=array('code'=>'wo', 'name'=>'Wolof');
+	$lang[136]=array('code'=>'xh', 'name'=>'Xhosa');
+	$lang[137]=array('code'=>'yi', 'name'=>'Yiddish');
+	$lang[138]=array('code'=>'yo', 'name'=>'Yoruba');
+	$lang[139]=array('code'=>'za', 'name'=>'Zhuang');
+	$lang[140]=array('code'=>'zh', 'name'=>'Chinese');
+	$lang[141]=array('code'=>'zu', 'name'=>'Zulu');
+	
+	$lang_as_list = "";
+	
+	foreach($lang as $l)
+	{
+		$lang_as_list .= "<option value='".$l['code']."'";
+		if($default_lang == $l['code'])
+		{
+			$lang_as_list .= " selected='selected'";
+		}
+		$lang_as_list .=">".$l['name']."</option>";
+	}
+
+	return $lang_as_list;	
+}
 	  
 
