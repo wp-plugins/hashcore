@@ -51,7 +51,7 @@ Please read the #HASHCORE best practices, go to [#HASHCORE - Best Practices](htt
 * Initial Version
 
 = 1.1 =
-* Added support for multiple langauges and "join the conversation" box
+* Added support for multiple languages and "join the conversation" box
 
 == Upgrade Notice ==
 
@@ -59,4 +59,4 @@ Please read the #HASHCORE best practices, go to [#HASHCORE - Best Practices](htt
 * Initial Version
 
 = 1.1 =
-* Added support for multiple langauges and "join the conversation" box
+* Added support for multiple languages and "join the conversation" box
