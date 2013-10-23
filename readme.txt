@@ -50,16 +50,21 @@ Please read the #HASHCORE best practices, go to [#HASHCORE - Best Practices](htt
 
 == Changelog ==
 
+= 1.1 =
+* Added support for multiple languages and "join the conversation" box
+
+
 = 1.0 =
 * Initial Version
 
-= 1.1 =
-* Added support for multiple languages and "join the conversation" box
 
 == Upgrade Notice ==
 
+= 1.1 =
+* Added support for multiple languages and "join the conversation" box
+
+
 = 1.0 =
 * Initial Version
 
-= 1.1 =
-* Added support for multiple languages and "join the conversation" box
+
