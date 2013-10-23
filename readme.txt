@@ -11,7 +11,10 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-[sign-up](http://hashcore.com/publishers-sign-up-form) for a Hashcore.com account. Install our plugin, then simply add the hash symbol (#) before any words (preferably known hashtags) such as #Xfactor and our solution will automatically link them to their equivalent hashtags from real-time social media sources such as Twitter.
+Install our plugin, then simply add the hash symbol (#) before any words (preferably known hashtags) such as #Xfactor and our solution will automatically link them to their equivalent hashtags from real-time social media sources such as Twitter.
+
+**IMPORTANT: You will FIRST need to register as a publisher, go to [#HASHCORE - sign up for FREE](http://hashcore.com/publishers-sign-up-form) and create a #HASHCORE account to get your publisher ID to activate the plugin. 
+
 
 == Installation ==
 
