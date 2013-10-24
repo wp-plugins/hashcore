@@ -10,20 +10,15 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 #HASHCORE: Use hashtags in-content to deliver real-time social media information to your readers.
 
 == Description ==
-Install our plugin, then simply add the hash symbol (#) before any
-words (preferably known hashtags) such as #Xfactor and our solution will
-automatically link them to their equivalent hashtags from real-time
-social media sources such as Twitter.
+Install our plugin, then simply add the hash symbol (#) before any words (preferably known hashtags) such as #Xfactor and our solution will automatically link them to their equivalent hashtags from real-time social media sources such as Twitter.
 
 
-**IMPORTANT: You will FIRST need to register as a publisher, go to
-[#HASHCORE - sign up for
-FREE](http://hashcore.com/publishers-sign-up-form) and create a
-#HASHCORE account to get your publisher ID to activate the plugin.
+**IMPORTANT: You will FIRST need to register as a publisher, go to [#HASHCORE - sign up for FREE](http://hashcore.com/publishers-sign-up-form) and create a #HASHCORE account to get your publisher ID to activate the plugin.
 
 
-If you have any questions or feedback, please do not hesitate to
-[contact us](http://hashcore.com/contact/)
+If you have any questions or feedback, please do not hesitate to [contact us](http://hashcore.com/contact/) 
+
+
 
 [youtube http://www.youtube.com/watch?v=JALFx1UysLg]
 
