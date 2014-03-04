@@ -3,7 +3,7 @@ Contributors: Tim Bobker
 Tags: Facebook widget, Twitter widget, Social Media, Hashcore, Instagram widget, Youtube widget, Social Media Aggregator, Social Feed Aggregator, Social Media Aggregation, import social feeds, Instagram hashtag, Twitter hashtag, display social media, embed social media feeds, Pinterest widget, integrate Pinterest, RSS widget
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,9 @@ Please read the #HASHCORE best practices, go to [#HASHCORE - Best Practices](htt
 
 == Changelog ==
 
+= 1.2 =
+* Update javascript code to point at new version
+
 = 1.1 =
 * Added support for multiple languages and "join the conversation" box
 
@@ -71,6 +74,9 @@ Please read the #HASHCORE best practices, go to [#HASHCORE - Best Practices](htt
 
 
 == Upgrade Notice ==
+
+= 1.2 =
+* New version of hashcore now available
 
 = 1.1 =
 * Added support for multiple languages and "join the conversation" box
