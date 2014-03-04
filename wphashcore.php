@@ -179,7 +179,7 @@ $fc_plugin_links = array(
 		echo 'var publisher="' .fc_publisher_code().'";';
 		echo 'var lang="'.fc_languages().'";';
 		echo '</script>';
-		echo '<script src="http://hashcore.com/hashcorev1.1/hashcore.js" type="text/javascript"></script>';
+		echo '<script src="http://api.hashcore.com/js/hashcore.js" type="text/javascript"></script>';
 	  }
 	  
 	  
