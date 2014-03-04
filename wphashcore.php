@@ -4,7 +4,7 @@
 Plugin Name: #Hashcore
 Plugin URI: http://hashcore.com/add-a-social-media-plugin-to-your-wordpress-website/
 Description: Sign-up for a Hashcore.com account. Install our plugin, then simply add the hash symbol (#) before any words (preferably known hashtags) such as #Xfactor and our solution will automatically link them to their equivalent hashtags from real-time social media sources such as Twitter.
-Version: 1.1
+Version: 1.2
 Author: Hashcore.com
 Author URI: http://www.hashcore.com
 License: GPL2 or later
