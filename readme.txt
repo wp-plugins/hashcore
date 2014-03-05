@@ -16,10 +16,7 @@ automatically link them to their equivalent hashtags from real-time
 social media sources such as Twitter.
 
 
-**IMPORTANT: You will FIRST need to register as a publisher, go to
-[#HASHCORE - sign up for
-FREE](http://hashcore.com/publishers-sign-up-form) and create a
-#HASHCORE account to get your publisher ID to activate the plugin.
+**IMPORTANT: You will FIRST need to register as a publisher, go to [#HASHCORE - sign up for FREE](http://hashcore.com/publishers-sign-up-form) and create a #HASHCORE account to get your publisher ID to activate the plugin.
 
 
 If you have any questions or feedback, please do not hesitate to
