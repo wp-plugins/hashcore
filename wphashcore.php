@@ -1,12 +1,11 @@
 <?php
 /*
-
 Plugin Name: #Hashcore
-Plugin URI: http://hashcore.com/add-a-social-media-plugin-to-your-wordpress-website/
-Description: Sign-up for a Hashcore.com account. Install our plugin, then simply add the hash symbol (#) before any words (preferably known hashtags) such as #Xfactor and our solution will automatically link them to their equivalent hashtags from real-time social media sources such as Twitter.
-Version: 1.2
+Plugin URI: http://hashcore.com
+Version: 1.4.0
 Author: Hashcore.com
 Author URI: http://www.hashcore.com
+Description: This plugin allows WordPress users to automatically integrate their social media content from Twitter and Instagram.
 License: GPL2 or later
 */
 
@@ -31,57 +30,70 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 if ( ! defined( 'ABSPATH' ) ) die();
 
 
-
 // Hook for adding admin menus
-if ( is_admin() ){ // admin actions
+// admin actions
+if ( is_admin() ){ 
 
-	// Hook for adding admin menu
-	add_action( 'admin_menu', 'fc_op_page' );
+		// Hook for adding admin menu
+		add_action( 'admin_menu', 'fc_op_page' );
 
-	// Display the 'Settings' link in the plugin row on the installed plugins list page
-	add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), 'fc_admin_plugin_actions', -10);
+		// Display the 'Settings' link in the plugin row on the installed plugins list page
+		add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), 'fc_admin_plugin_actions', -10);
 
 } 
 else 
 { // non-admin enqueues, actions, and filters
 
-     // hook for footer
-     add_action('wp_footer', 'fc_text_inputreal');
-     remove_filter( 'wp_footer', 'strip_tags' );
+	 // hook for footer
+	add_action('wp_footer', 'insert_js_tag');
+	remove_filter( 'wp_footer', 'strip_tags' );
+	 add_action('template_redirect', 'addDivToContent');
 }
 
 
 // action function for above hook
 function fc_op_page()
 {
-    // Add a new submenu under Settings:
-    add_options_page(__('Hashcore Settings','fc-menu'), __('Hashcore Settings','fc-menu'), 'manage_options', 'fcsettings', 'fc_settings_page');
+	// Add a new submenu under Settings:
+	add_options_page(__('Hashcore Settings','fc-menu'), __('Hashcore Settings','fc-menu'), 'manage_options', 'fcsettings', 'fc_settings_page');
 
 }
 // fc_settings_page() displays the page content for the Header and Footer Commander submenu
 function fc_settings_page() {
 
-    //must check that the user has the required capability 
-    if (!current_user_can('manage_options'))
-    {
-      wp_die( __('You do not have sufficient permissions to access this page.') );
-    }
+	//must check that the user has the required capability 
+	if (!current_user_can('manage_options'))
+	{
+	  wp_die( __('You do not have sufficient permissions to access this page.') );
+	}
 
-    // variables for the field and option names 
-    
-    $hidden_field_name = 'fc_submit_hidden';    
-    $fch_text = 'fch_input_text';
-    
-    
-    
-    // Twitter user name variables
-    $footer_field_name = 'fc_input_text';
-    $fc_text = 'fc_input_text';
+	
+
+	// variables for the field and option names 
+	
+	$hidden_field_name = 'fc_submit_hidden';    
+	$fch_text = 'fch_input_text';
+	
+	
+	// Custom language title
+	$custom_title_value = get_option('custom_title_value');
+	
+	// Custom recommended text
+	$custom_recommend_value = get_option('custom_recommend_value');
+	
+	// Twitter user name variables
+	$footer_field_name = 'fc_input_text';
+	$fc_text = 'fc_input_text';
 	$fc_val = get_option( $fc_text );
+	
+	// Instagram id variables
+	$instagram_field_name = 'instagram_field_name';
+	$instagram_input_text = 'instagram_input_text';
+	$instagram_val = get_option( $instagram_input_text );
 	
 	//publisher ID variables
 	$publisher_field_name = 'hc_input_text';	
-    $hc_publisher = 'hc_publisher_text';
+	$hc_publisher = 'hc_publisher_text';
 	$hc_val = get_option( $hc_publisher );
 	
 	// languages variables
@@ -100,11 +112,18 @@ if( isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' )
 	$fc_val = $_POST[$footer_field_name]; // Read their posted value      
 	update_option( $fc_text, $fc_val );  // Save the posted value in the database
 	
+	$instagram_val = $_POST[$instagram_field_name];
+	update_option($instagram_input_text,$instagram_val);
+	
 	$hc_val = $_POST[$publisher_field_name]; 
 	update_option( $hc_publisher, $hc_val );
 	
 	$hc_lang = $_POST[$publisher_languages]; 
 	update_option( $hc_languages, $hc_lang );
+	
+	update_option('custom_title_value', $_POST['custom_title_value'] );
+	
+	update_option('custom_recommend_value', $_POST['custom_recommend_value'] );
 	
 	
 	echo '<div class="updated"><p><strong>';
@@ -113,19 +132,26 @@ if( isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' )
 
 }
 
-    // Now display the settings editing screen
-    echo '<div class="wrap">';    
-    // icon for settings
-     echo '<div id="icon-plugins" class="icon32"></div>';
-    // header
-    echo "<h2>" . __( 'Hashcore Settings', 'fc-menu' ) . "</h2>";    
+	// Now display the settings editing screen
+	echo '<div class="wrap">';    
+	// icon for settings
+	 echo '<div id="icon-plugins" class="icon32"></div>';
+	// header
+	echo "<h2>" . __( 'Hashcore Settings', 'fc-menu' ) . "</h2>";    
  ?>
 
 
 <form name="form1" method="post" action="">
 <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
 
-<table>
+<table> 
+	<tr>
+		<td><?php _e('Publisher ID', 'fc-menu' ); ?></td>
+		<td>
+			<input type="text" name="<?php echo $publisher_field_name; ?>" value="<?php echo $hc_val; ?>" />
+			&nbsp;Please register <a href="http://hashcore.com/publishers-sign-up-form/" title="register with hashcore" target="_blank">here</a> to get your unique publisher ID
+		</td>
+	</tr>
 	<tr>
 		<td><?php _e('Twitter username', 'fc-menu' ); ?>&nbsp;@</td>
 		<td>
@@ -133,12 +159,26 @@ if( isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' )
 			&nbsp;If left blank, defaults to HASHCORE_COM
 		</td>
 	</tr>
+	<tr>
+		<td><?php _e('Instagram ID', 'fc-menu' ); ?>&nbsp;</td>
+		<td>
+			<input type="text" name="<?php echo $instagram_field_name; ?>" value="<?php echo $instagram_val; ?>" />	
+			You can find your id <a href="http://jelled.com/instagram/lookup-user-id" target="_blank">here</a>
+		</td>
+	</tr>
 	
 	<tr>
-		<td><?php _e('Publisher ID', 'fc-menu' ); ?></td>
+		<td><?php _e('Custom Title', 'fc-menu' ); ?></td>
 		<td>
-			<input type="text" name="<?php echo $publisher_field_name; ?>" value="<?php echo $hc_val; ?>" />
-			&nbsp;Please register <a href="http://hashcore.com/publishers-sign-up-form/" title="register with hashcore" target="_blank">here</a> to get your unique publisher ID
+			<input type="text" name="custom_title_value" value="<?php echo stripslashes (get_option('custom_title_value')); ?>" />
+			This text is displayed in the heading of the widget, defaults to What's Happening
+		</td>
+	</tr>
+	<tr>
+		<td><?php _e('Recommended by', 'fc-menu' ); ?></td>
+		<td>
+			<input type="text" name="custom_recommend_value" value="<?php echo stripslashes (get_option('custom_recommend_value')); ?>" />
+			This text is displayed in the heading of the widget, defaults to Recommended by
 		</td>
 	</tr>
 	
@@ -157,6 +197,8 @@ if( isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' )
 
 
 </form>
+
+<h1><a target="_blank" href="http://dashboard.hashcore.com/">Go to reporting dashboard</a></h1>
 <?php }
 
 
@@ -164,7 +206,7 @@ if( isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' )
 function fc_admin_plugin_actions($links) {
 
 $fc_plugin_links = array(
-          '<a href="options-general.php?page=fcsettings">'.__('Settings').'</a>',
+		  '<a href="options-general.php?page=fcsettings">'.__('Settings').'</a>',
 );
 
 	return array_merge( $fc_plugin_links, $links );
@@ -172,15 +214,22 @@ $fc_plugin_links = array(
 }
 
 // Display footer
-      function fc_text_inputreal() 
-      {
-		echo '<script type="text/javascript">';
-		echo 'var TWITTER_USERNAME="'.fc_twitter_username().'";';
-		echo 'var publisher="' .fc_publisher_code().'";';
-		echo 'var lang="'.fc_languages().'";';
-		echo '</script>';
-		echo '<script src="http://api.hashcore.com/js/hashcore.js" type="text/javascript"></script>';
-	  }
+function insert_js_tag() 
+{
+	$tag = '<script>';
+	$tag .= '(function(w,d){';
+	$tag .=  'w.pubcode = "'.get_option('hc_publisher_text').'";';
+	$tag .=  'w.instagram = "'.get_option('instagram_input_text').'"; ';
+	$tag .=  'w.twitter = "'.get_option('fc_input_text').'";';
+	$tag .=  'var s=document.createElement("script"); s.async=true; s.src="http://c.hashcore.com/api/widget.js?r=" + Math.round(Math.random(1000,5000));';
+	$tag .=  'var s2=document.getElementsByTagName("script")[0]; s2.parentNode.insertBefore(s,s2);';
+	$tag .=  '})(window,document);';
+	$tag .=  '</script>';
+	
+	print $tag;
+}
+	  
+
 	  
 	  
 	  
@@ -196,6 +245,18 @@ function fc_twitter_username()
 	}
 }
 
+function fc_instagram_id()
+{
+	if(get_option('instagram_id') == '')
+	{
+		return "xxxxxx";
+	}
+	else
+	{
+		return get_option('instagram_id');
+	}
+}
+
 function fc_publisher_code()
 {
 	if(get_option('hc_publisher_text') == '')
@@ -205,6 +266,18 @@ function fc_publisher_code()
 	else
 	{
 		return get_option('hc_publisher_text');
+	}
+}
+
+function custom_language_title()
+{
+	if(get_option('custom_language_title') == '')
+	{
+		return "x";
+	}
+	else
+	{
+		return get_option('custom_language_title');
 	}
 }
 
@@ -391,5 +464,31 @@ function language_options($set_lang)
 
 	return $lang_as_list;	
 }
-	  
 
+function addDivToContent()
+{	
+   if(is_single() && is_main_query())   
+   {
+	  add_filter('the_content', 'filter_content');
+	}	
+}
+
+function filter_content($content)
+{		
+
+	if(get_option('custom_title_value') == ""){
+		$title = "What's Happening";
+	}else{
+		$title = stripslashes(get_option('custom_title_value'));
+	}
+	
+	if(get_option('custom_recommend_value') == ""){
+		$recommend = "Recommended by";
+	}else{
+		$recommend = stripslashes(get_option('custom_recommend_value'));
+	}
+	
+	return $content . "<div id=\"hashcore-widget-container\"><h1><span  style=\"float:left;font-size:12px !important;\">".$title."</span> <span style=\"float:right;font-size:12px !important;\"><a class=\"hashcore-recommendby-link\" href=\"http://hashcore.com\" target=\"_blank\">".$recommend." Hashcore</a></span><br style=\"clear:both;\" /></h1></div>";
+	
+}	
+?>
